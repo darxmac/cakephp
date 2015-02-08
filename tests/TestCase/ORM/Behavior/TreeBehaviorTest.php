@@ -15,6 +15,7 @@
 namespace Cake\Test\TestCase\ORM\Behavior;
 
 use Cake\Collection\Collection;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\Behavior\TranslateBehavior;
 use Cake\ORM\Entity;
@@ -379,6 +380,18 @@ class TreeBehaviorTest extends TestCase
         $this->assertEquals([3, 4, 5, 2], $nodes->extract('id')->toArray());
         $this->assertEquals(['lft' => 11, 'rght' => 12], $node->extract(['lft', 'rght']));
     }
+
+	/**
+	 *
+	 */
+	public function testMoveDownError() {
+
+		$node = $this->table->moveDown($this->table->get(3), 2);
+		$result = $this->table->find('children', ['for' => 2, 'direct' => true])->order(['lft' => 'ASC'])->all()->extract('id')->toArray();
+		$this->assertEquals([4,5,3], $result);
+
+	}
+
 
     /**
      * Tests moving a node that has no siblings
